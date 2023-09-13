@@ -79,7 +79,6 @@
             :checked="isAllChecked"
             @click="handleAllCheck"
           />
-          <span class="checkbox-img"></span>
           <label for="all-agree">아래 약관에 모두 동의합니다.</label>
         </div>
         <div class="line-container">
@@ -94,9 +93,10 @@
             :value="item.id"
             @click="handleCheck"
           />
-          <span class="checkbox-img"></span>
-          <label :for="item.id"
-            >{{ item.content }} ({{ item.isRequired ? '필수' : '선택' }})
+          <label :for="item.id">
+            <span>
+              {{ item.content }} ({{ item.isRequired ? '필수' : '선택' }})
+            </span>
           </label>
         </div>
       </div>
@@ -301,28 +301,57 @@ export default {
 }
 
 .checkbox-field {
+  position: relative;
   display: flex;
   align-items: center;
   gap: 0.5rem;
 }
 
 .checkbox-field label {
+  display: flex;
+  align-items: center;
+  font-size: 0.8rem;
+}
+
+.checkbox-field label::before {
+  content: '';
+  display: inline-block;
+  width: 18px;
+  height: 18px;
+  margin: 0 5px 0 0;
+  background: #fff;
+  border: 1px solid #eee;
 }
 
 .checkbox-field input[type='checkbox'] {
   display: none;
 }
 
-.checkbox-img {
-  display: inline-block;
-  width: 20px;
-  height: 20px;
-  background: url('https://s.wemep.co.kr/ui/v2.8.307/dist/pc/css/spr/common.png')
-    0 -438px no-repeat;
-  vertical-align: top;
+// .checkbox-img {
+//   display: inline-block;
+//   width: 20px;
+//   height: 20px;
+//   background: url('https://s.wemep.co.kr/ui/v2.8.307/dist/pc/css/spr/common.png')
+//     0 -438px no-repeat;
+//   vertical-align: top;
+// }
+
+.checkbox-field input[type='checkbox']:checked + label::before {
+  background: $bg-color;
+  border-color: $bg-color;
 }
 
-.checkbox-field input[type='checkbox']:checked + span {
-  background-position: -75px -438px;
+.checkbox-field input[type='checkbox']:checked + label::after {
+  content: '';
+  width: 10px;
+  height: 5px;
+  border-width: 0 0 2px 2px;
+  border-color: #fff;
+  border-style: solid;
+  position: absolute;
+  transform: rotate(-45deg);
+  position: absolute;
+  left: 4px;
+  top: 4px;
 }
 </style>

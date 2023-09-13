@@ -1,5 +1,12 @@
 <template>
-  <div>Home</div>
+  <div>
+    <Button>
+      <template #icon>
+        <i class="fa-brands fa-instagram"></i>
+      </template>
+      TEST
+    </Button>
+  </div>
 </template>
 
 <script lang="ts">

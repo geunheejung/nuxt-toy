@@ -1,5 +1,5 @@
 <template>
-  <Tutorial />
+  <div>Home</div>
 </template>
 
 <script lang="ts">
@@ -9,8 +9,5 @@ import Vue from 'vue'
 // 타입스크립트 코드가 뷰의 속성들과 함께 정상적으로 동작함.
 export default Vue.extend({
   name: 'IndexPage',
-  created() {
-    console.log(this.$store)
-  },
 })
 </script>

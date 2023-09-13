@@ -79,6 +79,7 @@
             :checked="isAllChecked"
             @click="handleAllCheck"
           />
+          <span class="checkbox-img"></span>
           <label for="all-agree">아래 약관에 모두 동의합니다.</label>
         </div>
         <div class="line-container">
@@ -90,11 +91,13 @@
             type="checkbox"
             :checked="item.isChecked"
             :required="item.isRequired"
+            :value="item.id"
             @click="handleCheck"
           />
+          <span class="checkbox-img"></span>
           <label :for="item.id"
-            >{{ item.content }} ({{ item.isRequired ? '필수' : '선택' }})</label
-          >
+            >{{ item.content }} ({{ item.isRequired ? '필수' : '선택' }})
+          </label>
         </div>
       </div>
       <div class="submit-container">
@@ -297,6 +300,29 @@ export default {
   margin: 0;
 }
 
-.submit-container {
+.checkbox-field {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.checkbox-field label {
+}
+
+.checkbox-field input[type='checkbox'] {
+  display: none;
+}
+
+.checkbox-img {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  background: url('https://s.wemep.co.kr/ui/v2.8.307/dist/pc/css/spr/common.png')
+    0 -438px no-repeat;
+  vertical-align: top;
+}
+
+.checkbox-field input[type='checkbox']:checked + span {
+  background-position: -75px -438px;
 }
 </style>

@@ -25,7 +25,7 @@
       <div class="line"></div>
       <p>또는</p>
     </div>
-    <form class="form-container">
+    <form class="form-container" @submit.prevent="handleSubmit">
       <div class="text-field-wrapper">
         <div>
           <TextField
@@ -43,6 +43,7 @@
             :name="inputName.email"
             :input-value="formData[inputName.email]"
             :placeholder="'이메일'"
+            :type="'email'"
             @onInput="handleInput"
           />
           <p class="error-message">
@@ -54,6 +55,7 @@
             :name="inputName.password"
             :input-value="formData[inputName.password]"
             :placeholder="'비밀번호'"
+            :type="'password'"
             @onInput="handleInput"
           />
 
@@ -67,6 +69,7 @@
             :name="inputName.rePassword"
             :input-value="formData[inputName.rePassword]"
             :placeholder="'비밀번호 확인'"
+            :type="'password'"
             @onInput="handleInput"
           />
         </div>
@@ -88,8 +91,8 @@
           <input
             :id="item.id"
             type="checkbox"
+            :name="item.id"
             :checked="item.isChecked"
-            :required="item.isRequired"
             :value="item.id"
             @click="handleCheck"
           />
@@ -101,26 +104,89 @@
         </div>
       </div>
       <div class="submit-container">
-        <Button :type="'submit'"> 회원가입 </Button>
+        <Button :style-type="'submit'" :type="'submit'"> 회원가입 </Button>
       </div>
     </form>
   </div>
 </template>
 
 <script lang="ts">
-const inputName = {
+import Vue from 'vue'
+import { SignUpPayloadType } from '../../api/member'
+import { validateSignUp } from '~/utils/validate'
+import { ACTION } from '~/store'
+import openToast from '~/utils/openToast'
+
+export const inputName = {
   nickname: 'nickname',
   email: 'email',
   password: 'password',
   rePassword: 'rePassword',
 } as const
 
-export default {
+const data = {
+  formData: {
+    [inputName.nickname]: '',
+    [inputName.email]: '',
+    [inputName.password]: '',
+    [inputName.rePassword]: '',
+  },
+  formErrorMessage: {
+    [inputName.nickname]: '',
+    [inputName.email]: '',
+    [inputName.password]: '',
+    [inputName.rePassword]: '',
+  },
+  isAllChecked: false,
+  checkedData: [
+    {
+      id: 'terms',
+      content: '서비스 이용약관',
+      isRequired: true,
+      isChecked: false,
+    },
+    {
+      id: 'Privacy',
+      content: '개인정보 수집 및 이용',
+      isRequired: true,
+      isChecked: false,
+    },
+    {
+      id: 'minor',
+      content: '본인은 만 14세 이상입니다.',
+      isRequired: false,
+      isChecked: false,
+    },
+    {
+      id: 'sms',
+      content: '이벤트 등 프로모션 알림 SMS 수신',
+      isRequired: false,
+      isChecked: false,
+    },
+    {
+      id: 'mail',
+      content: '이벤트 등 프로모션 알림 메일 수신',
+      isRequired: false,
+      isChecked: false,
+    },
+  ],
+}
+export default Vue.extend<typeof data>({
   layout: 'auth',
   data() {
     return {
-      formData: {},
-      formErrorMessage: {},
+      formData: {
+        [inputName.nickname]: 'geuni',
+        [inputName.email]: 'a@naver.com',
+        [inputName.password]: 'test1234',
+        [inputName.rePassword]: 'test1234',
+      },
+      formErrorMessage: {
+        [inputName.nickname]: '',
+        [inputName.email]: '',
+        [inputName.password]: '',
+        [inputName.rePassword]: '',
+      },
       isAllChecked: false,
       checkedData: [
         {
@@ -159,48 +225,50 @@ export default {
   computed: {
     inputName: () => inputName,
     errorMsg() {
-      return function (name: keyof typeof inputName) {
-        return this.formErrorMessage[name]
-      }
+      const { formErrorMessage } = this
+      return (name: keyof typeof inputName) => formErrorMessage[name]
     },
-    getAllChecked() {
+    getAllChecked(): boolean {
       return this.checkedData.every((row) => row.isChecked)
     },
-  },
-  created() {},
-  methods: {
-    updateErrorMessageTo(name: keyof typeof inputName, value = '') {
-      this.$set(this.formErrorMessage, name, value)
+    getAgreeList(): string {
+      // 현재 체크 현황에서 체크된 요소는 1로 체크되지 않은 요소는 0으로
+      return this.checkedData.reduce(
+        (prev, curr) => prev + (curr.isChecked ? '1' : '0'),
+        ''
+      )
     },
-    validate(name: keyof typeof inputName, value: string) {
-      const specialRegex = /[`~!@#$%^&*|\\\'\";:\/?]/gi
-      const emailRegex =
-        /^([0-9a-zA-Z_\.-]+)@([0-9a-zA-Z_-]+)(\.[0-9a-zA-Z_-]+){1,2}$/
+  },
+  methods: {
+    async signupFlow() {
+      try {
+        const { email, password, nickname } = this.formData
+        const payload: SignUpPayloadType = {
+          email,
+          password,
+          name: nickname,
+          agree: this.getAgreeList,
+        }
 
-      const _clear = () => this.updateErrorMessageTo(name, '')
+        await this.$store.dispatch({
+          type: ACTION.FETCH_SIGN_UP,
+          payload,
+        })
 
+        this.$router.push('/auth/login')
+      } catch (error) {
+        openToast('warning', error.message)
+      }
+    },
+    validate(name: string, value: string) {
       if (!value.length) {
-        _clear()
+        this.$set(this.formErrorMessage, name, '')
         return
       }
 
-      switch (name) {
-        case 'nickname':
-          if (value.length >= 2 && !specialRegex.test(value)) return _clear()
-          return this.updateErrorMessageTo(
-            name,
-            '닉네임은 두 글자 이상(특수문자 입력 불가) 입력해주세요.'
-          )
-        case 'email':
-          if (emailRegex.test(value)) return _clear()
+      const message = validateSignUp(name, value)
 
-          return this.updateErrorMessageTo(
-            name,
-            '이메일 형식이 유효하지 않습니다.'
-          )
-        default:
-          break
-      }
+      this.$set(this.formErrorMessage, name, message)
     },
     handleInput(target: HTMLInputElement) {
       const { name, value } = target
@@ -223,8 +291,11 @@ export default {
       this.checkedData[targetIndex].isChecked = checked
       this.isAllChecked = this.getAllChecked
     },
+    handleSubmit(e: Event) {
+      this.signupFlow()
+    },
   },
-}
+})
 </script>
 
 <style scoped lang="scss">
@@ -355,3 +426,4 @@ export default {
   top: 4px;
 }
 </style>
+~/common/regexp

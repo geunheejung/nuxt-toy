@@ -1,5 +1,9 @@
 <template>
-  <button :class="['btn-container', type]" @click="handleClick">
+  <button
+    :class="['btn-container', styleType]"
+    :type="type"
+    @click="handleClick"
+  >
     <div class="icon">
       <slot name="icon"> </slot>
     </div>
@@ -14,12 +18,13 @@ import Vue from 'vue'
 export default Vue.extend({
   props: {
     size: String,
+    styleType: String,
     type: String,
     color: String,
     disabled: Boolean,
   },
   methods: {
-    handleClick(e) {
+    handleClick(e: Event) {
       this.$emit('onClick')
     },
   },
@@ -38,6 +43,7 @@ export default Vue.extend({
   background-color: #fff;
   border-radius: 3px;
   border: 1px solid $border-color;
+  cursor: pointer;
 }
 
 .btn-container.default {

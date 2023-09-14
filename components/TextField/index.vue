@@ -3,7 +3,7 @@
     <label :for="name">{{ name }}</label>
     <input
       :value="inputValue"
-      type="text"
+      :type="type || 'text'"
       class="text-input"
       :name="name"
       :placeholder="placeholder"
@@ -16,6 +16,7 @@
 export default {
   props: {
     className: String,
+    type: String,
     name: String,
     placeholder: String,
     inputValue: String,

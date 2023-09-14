@@ -32,6 +32,9 @@ export default {
     {
       src: '@/plugins/register-component.ts',
     },
+    {
+      src: '@/plugins/vue-toast.ts',
+    },
   ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
@@ -45,12 +48,17 @@ export default {
     '@nuxtjs/style-resources',
   ],
   styleResources: {
-    scss: ['@/assets/styles/_main.scss'],
+    scss: [
+      '@/assets/styles/_main.scss',
+      'vue-toast-notification/dist/theme-bootstrap.css',
+    ],
   },
 
   // Modules: https://go.nuxtjs.dev/config-modules
   modules: [],
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
-  build: {},
+  build: {
+    transpile: [({ isLegacy }) => isLegacy && 'axios'],
+  },
 }

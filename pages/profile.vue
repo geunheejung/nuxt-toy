@@ -1,6 +1,7 @@
 <template>
   <div class="profile-wrapper">
-    <section class="user-info-wrapper">
+    <InterestCard />
+    <!-- <section class="user-info-wrapper">
       <ul class="info-container">
         <li class="info-field">
           <div class="title">
@@ -39,7 +40,7 @@
           </div>
         </li>
       </ul>
-    </section>
+    </section> -->
   </div>
 </template>
 
@@ -49,7 +50,6 @@ import { fetchGetUser } from '../api/member'
 
 export default Vue.extend({
   name: 'Profile',
-  layout: 'auth',
   async asyncData() {
     // 유저 정보 불러와야함
     const res = await fetchGetUser()
@@ -67,6 +67,7 @@ export default Vue.extend({
 <style lang="scss" scoped>
 .profile-wrapper {
   display: grid;
+  width: 400px;
 }
 
 .user-info-wrapper {

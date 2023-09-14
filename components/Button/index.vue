@@ -1,12 +1,12 @@
 <template>
   <button
-    :class="['btn-container', styleType]"
+    :class="['btn-container', styleType, color]"
     :type="type"
     @click="handleClick"
   >
-    <div class="icon">
-      <slot name="icon"> </slot>
-    </div>
+    <slot name="icon">
+      <div class="icon"></div>
+    </slot>
     <div class="content">
       <slot name="default"></slot>
     </div>
@@ -38,7 +38,6 @@ export default Vue.extend({
   justify-content: center;
   width: 100%;
   height: 100%;
-  min-width: 130px;
   padding: 0.5rem 1rem;
   font-size: 1rem;
   background-color: #fff;
@@ -62,7 +61,29 @@ export default Vue.extend({
   font-weight: bold;
 }
 
+.btn-container.small {
+  font-size: 0.75rem;
+  padding: 0 0.5rem;
+}
+
+.btn-container.basic {
+  border-color: $border-color2;
+  color: $font-color;
+}
+
+.btn-container.purple {
+  border-color: #704de4;
+  color: #704de4;
+  background: #fff;
+}
+
+.btn-container.white {
+  border-color: #fff;
+  color: #fff;
+  background: inherit;
+}
+
 .icon {
-  margin: 0 0.5rem 0 0;
+  // margin: 0 0.5rem 0 0;
 }
 </style>

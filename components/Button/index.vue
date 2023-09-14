@@ -37,6 +37,7 @@ export default Vue.extend({
   align-items: center;
   justify-content: center;
   width: 100%;
+  height: 100%;
   min-width: 130px;
   padding: 0.5rem 1rem;
   font-size: 1rem;

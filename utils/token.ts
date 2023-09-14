@@ -1,0 +1,10 @@
+const token = {
+  setToken: (token: string) => {
+    const accessTokenKey = encodeURIComponent('accessToken')
+    const accessToken = encodeURIComponent(token)
+    // document.cookie = `${accessTokenKey}=${accessToken}; max-age=300; SameSite; HttpOnly;`
+    document.cookie = `test${accessTokenKey}=${accessToken}; max-age=300; SameSite=lax;`
+  },
+}
+
+export default token

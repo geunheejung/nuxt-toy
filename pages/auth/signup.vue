@@ -1,6 +1,5 @@
 <template>
-  <div class="wrapper">
-    <!-- 상단 소셜 로그인 -->
+  <div class="auth-grid">
     <div class="btn-wrapper">
       <Button>
         <template #icon>
@@ -21,10 +20,7 @@
         Apple로 로그인
       </Button>
     </div>
-    <div class="line-container">
-      <div class="line"></div>
-      <p>또는</p>
-    </div>
+    <DivisionLine :text="'또는'"></DivisionLine>
     <form class="form-container" @submit.prevent="handleSubmit">
       <div class="text-field-wrapper">
         <div>
@@ -84,9 +80,7 @@
           />
           <label for="all-agree">아래 약관에 모두 동의합니다.</label>
         </div>
-        <div class="line-container">
-          <div class="line"></div>
-        </div>
+        <DivisionLine> </DivisionLine>
         <div v-for="item in checkedData" :key="item.id" class="checkbox-field">
           <input
             :id="item.id"
@@ -299,52 +293,6 @@ export default Vue.extend<typeof data>({
 </script>
 
 <style scoped lang="scss">
-.wrapper {
-  width: 640px;
-  margin: 0 auto;
-  padding: 2rem;
-  background: #fff;
-  box-sizing: border-box;
-}
-
-@media (max-width: 1000px) {
-  .wrapper {
-    width: 100%;
-  }
-}
-
-.btn-wrapper {
-  display: grid;
-  row-gap: 16px;
-}
-
-.line-container {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-  width: 100%;
-  margin: 1rem 0;
-}
-
-.line {
-  position: absolute;
-  width: 100%;
-  height: 1px;
-  background: #eee;
-}
-
-.line-container > p {
-  z-index: 2;
-  padding: 0 1rem;
-  background: #fff;
-}
-
-.form-container {
-  display: grid;
-  row-gap: 32px;
-}
-
 .text-field-wrapper {
   display: grid;
   row-gap: 1rem;

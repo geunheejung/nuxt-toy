@@ -13,7 +13,8 @@
 </template>
 
 <script lang="ts">
-export default {
+import Vue from 'vue'
+export default Vue.extend({
   props: {
     className: String,
     type: String,
@@ -28,7 +29,7 @@ export default {
       this.$emit('onInput', target)
     },
   },
-}
+})
 </script>
 
 <style lang="scss" scoped>

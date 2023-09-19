@@ -1,4 +1,5 @@
 import axios from 'axios'
+import { fetchRefreshToken } from './member'
 import token from '~/utils/token'
 
 const instance = axios.create({
@@ -11,7 +12,6 @@ instance.interceptors.request.use(
     return config
   },
   (error) => {
-    debugger
     return Promise.reject(error)
   }
 )
@@ -30,13 +30,22 @@ instance.interceptors.response.use(
 
     return response
   },
-  (error) => {
-    console.log(error)
+  async (error) => {
+    const { response } = error
+    if (response) {
+      const { status } = response
+      if (status === 401) {
+        // const token = await fetchRefreshToken()
+        // token.setToken(token)
+      }
+    }
+
     return Promise.reject(error)
   }
 )
 
 export const API_PATH = {
+  refresh: 'auth/refresh',
   signUp: 'auth/signup',
   login: 'auth/login',
   user: 'member/user',

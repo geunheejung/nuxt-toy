@@ -115,31 +115,34 @@
 <script>
 import Vue from 'vue'
 import { fetchGetUser } from '../api/member'
+import { ACTION } from '../store'
 import Swipe from '@/components/Swipe/index.vue'
 
 export default Vue.extend({
   name: 'Profile',
   components: { Swipe },
-  async asyncData() {
+  async asyncData({ error, store }) {
     try {
       const res = await fetchGetUser()
-
       return {
         user: res.data.data,
       }
-    } catch (error) {
-      return {
-        user: null,
+    } catch (err) {
+      if (err.status === 401) {
+        await store.dispatch(ACTION.FETCH_REFRESH_TOKEN)
+        const res = await fetchGetUser()
+        return {
+          user: res.data.data,
+        }
       }
+      error({
+        statusCode: 401,
+        message: '권한이 없습니다. 로그인 후 이용 해주세요',
+      })
     }
   },
   data() {
     return {}
-  },
-  methods: {
-    handleTest() {
-      console.log('test')
-    },
   },
 })
 </script>

@@ -59,6 +59,24 @@ export const fetchGetUser = async () => {
     return res
   } catch (error: any) {
     if (!error.response) throw new ApiError(error.message, 500)
+
+    const {
+      data: { message },
+      status,
+    } = error.response
+
+    throw new ApiError(message, status)
+  }
+}
+
+export const fetchRefreshToken = async () => {
+  try {
+    const res = await instance.post(API_PATH.refresh)
+
+    return res.data.data
+  } catch (error: any) {
+    if (!error.response) throw new ApiError(error.message, 500)
+
     const {
       data: { message },
       status,

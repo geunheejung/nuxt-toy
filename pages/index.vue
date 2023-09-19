@@ -1,12 +1,10 @@
 <template>
   <div>
-    <template v-if="user">
-      <div>
-        <NuxtLink to="profile">프로필</NuxtLink>
-        <NuxtLink to="auth/login">로그아웃</NuxtLink>
-      </div>
-    </template>
+    <div v-if="isAuth">
+      <NuxtLink to="auth/login">로그아웃</NuxtLink>
+    </div>
     <template v-else>
+      <NuxtLink to="profile">프로필</NuxtLink>
       <NuxtLink to="auth/login">로그인</NuxtLink>
     </template>
   </div>
@@ -21,7 +19,7 @@ import { mapState } from 'vuex'
 export default Vue.extend({
   name: 'IndexPage',
   computed: {
-    ...mapState(['user']),
+    ...mapState(['user', 'isAuth']),
   },
 })
 </script>

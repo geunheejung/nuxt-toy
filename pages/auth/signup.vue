@@ -166,7 +166,7 @@ const data = {
     },
   ],
 }
-export default Vue.extend<typeof data>({
+export default Vue.extend({
   layout: 'auth',
   data() {
     return {

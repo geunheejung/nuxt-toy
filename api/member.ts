@@ -58,7 +58,6 @@ export const fetchGetUser = async () => {
     const res = await instance.get(API_PATH.user)
     return res
   } catch (error: any) {
-    console.log(error)
     if (!error.response) throw new ApiError(error.message, 500)
     const {
       data: { message },

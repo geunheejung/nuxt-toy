@@ -39,9 +39,7 @@ export default Vue.extend({
   width: 100%;
   height: 100%;
   padding: 0.5rem 1rem;
-  font-size: 1rem;
   background-color: #fff;
-  border-radius: 3px;
   border: 1px solid $border-color;
   cursor: pointer;
 }
@@ -64,6 +62,12 @@ export default Vue.extend({
 .btn-container.small {
   font-size: 0.75rem;
   padding: 0 0.5rem;
+}
+
+.btn-container.middle {
+  height: 24px;
+  padding: 0 4px;
+  box-sizing: border-box;
 }
 
 .btn-container.basic {

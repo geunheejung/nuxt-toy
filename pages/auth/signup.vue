@@ -101,6 +101,7 @@
         <Button :style-type="'submit'" :type="'submit'"> 회원가입 </Button>
       </div>
     </form>
+    <nuxt-link to="/auth/login">로그인</nuxt-link>
   </div>
 </template>
 

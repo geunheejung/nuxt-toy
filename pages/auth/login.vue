@@ -39,6 +39,7 @@
       <div class="submit-container">
         <Button :style-type="'submit'" :type="'submit'"> 로그인 </Button>
       </div>
+      <nuxt-link to="/auth/signup">회원가입</nuxt-link>
     </form>
   </div>
 </template>

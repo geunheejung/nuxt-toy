@@ -1,73 +1,152 @@
 <template>
   <div class="profile-wrapper">
-    <InterestCard />
-    <!-- <section class="user-info-wrapper">
-      <ul class="info-container">
-        <li class="info-field">
-          <div class="title">
-            <span>닉네임</span>
+    <div class="layout">
+      <h1 class="title">프로필 관리</h1>
+      <div class="inner-layout">
+        <div class="profile-wrapper">
+          <div class="left">
+            <ImageUpload></ImageUpload>
           </div>
-          <div class="content">
-            <p>{{ user.name }}</p>
-            <button>변경하기</button>
+          <div class="right">
+            <article class="card-wrapper">
+              <div class="header">
+                <p class="title">내 관심정보</p>
+                <Button :style-type="'middle'" :color="'white'"
+                  >변경하기</Button
+                >
+              </div>
+              <div class="main-wrapper">
+                <div class="item-container">
+                  <p class="title">관심지역</p>
+                  <div class="tag-container">
+                    <div class="icon">
+                      <i class="fa-solid fa-location-dot"></i>
+                    </div>
+                    <p class="content">강남역·역삼·선릉·삼성</p>
+                  </div>
+                </div>
+                <div class="item-container">
+                  <p class="title">프로필</p>
+                  <div class="tag-container">
+                    <div class="icon"><i class="fa-solid fa-laptop"></i></div>
+                    <p class="content">원하는 곳에서 자유롭게 일하는</p>
+                  </div>
+                </div>
+                <div class="item-container">
+                  <p class="title">관심사</p>
+                  <div class="tag-container">
+                    <p class="content">IT기술</p>
+                  </div>
+                  <div class="tag-container">
+                    <p class="content">여행/워케이션</p>
+                  </div>
+                  <div class="tag-container">
+                    <p class="content">커리어/자기계발</p>
+                  </div>
+                </div>
+              </div>
+            </article>
+            <article class="card-wrapper privacy-setting">
+              <ul class="main-wrapper">
+                <li class="item">
+                  <p class="title">닉네임</p>
+                  <p class="content">
+                    정근희
+                    <a href="#" class="link-btn">변경하기</a>
+                  </p>
+                </li>
+                <li class="item">
+                  <p class="title">이메일</p>
+                  <p class="content">geunhee0212@gmail.com</p>
+                  <p class="mutation">
+                    <span class="completed">인증완료</span>
+                  </p>
+                </li>
+                <li class="item">
+                  <p class="title">연락처</p>
+                  <p class="content">01053852003</p>
+                  <p class="mutation">
+                    <Button :style-type="'middle'" :color="'purple'"
+                      >인증하기</Button
+                    >
+                  </p>
+                </li>
+                <li class="item">
+                  <p class="title">SNS연동</p>
+                  <p class="content">
+                    <i class="fa-brands fa-instagram"></i>
+                    네이버 연동
+                  </p>
+                  <Swipe :id="'naverSwipe'" :value="'naverSwipe'" />
+                </li>
+                <li class="item">
+                  <p class="title"></p>
+                  <p class="content">
+                    <i class="fa-brands fa-facebook"></i>
+                    카카오 연동
+                  </p>
+                  <Swipe :id="'kakaoSwipe'" :value="'kakaoSwipe'" />
+                </li>
+                <li class="item">
+                  <p class="title">비밀번호</p>
+                  <p class="content">
+                    <a class="link-btn" href="">변경하기</a>
+                  </p>
+                </li>
+                <li class="item">
+                  <p class="title">마케팅 수신동의</p>
+                  <p class="content">이메일</p>
+                  <Swipe :id="'emailSwipe'" :value="'emailSwipe'" />
+                </li>
+                <li class="item">
+                  <p class="title"></p>
+                  <p class="content">SMS</p>
+                  <Swipe :id="'smsSwipe'" :value="'smsSwipe'" />
+                </li>
+              </ul>
+            </article>
           </div>
-        </li>
-        <li class="info-field">
-          <div class="title">
-            <span>이메일</span>
-          </div>
-          <div class="content">
-            <p>{{ user.email }}</p>
-            <button>변경하기</button>
-          </div>
-        </li>
-
-        <li class="info-field">
-          <div class="title">
-            <span>연락처</span>
-          </div>
-          <div class="content">
-            <button>인증하기</button>
-          </div>
-        </li>
-
-        <li class="info-field">
-          <div class="title">
-            <span>비밀번호</span>
-          </div>
-          <div class="content">
-            <button>변경하기</button>
-          </div>
-        </li>
-      </ul>
-    </section> -->
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
 import Vue from 'vue'
 import { fetchGetUser } from '../api/member'
+import Swipe from '@/components/Swipe/index.vue'
 
 export default Vue.extend({
   name: 'Profile',
+  components: { Swipe },
   async asyncData() {
-    // 유저 정보 불러와야함
-    const res = await fetchGetUser()
+    try {
+      const res = await fetchGetUser()
 
-    return {
-      user: res.data.data,
+      return {
+        user: res.data.data,
+      }
+    } catch (error) {
+      return {
+        user: null,
+      }
     }
   },
   data() {
     return {}
+  },
+  methods: {
+    handleTest() {
+      console.log('test')
+    },
   },
 })
 </script>
 
 <style lang="scss" scoped>
 .profile-wrapper {
-  display: grid;
-  width: 400px;
+  font-size: 0.875rem;
 }
 
 .user-info-wrapper {
@@ -99,5 +178,98 @@ export default Vue.extend({
   cursor: pointer;
 }
 .info-field .content {
+}
+
+.layout {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background: $bg-color2;
+  width: 100vw;
+  height: 100%;
+  min-height: 100vh;
+}
+
+.inner-layout {
+  display: flex;
+  padding: 1.875rem 0;
+}
+.layout > .title {
+  padding: 7.5rem 0 1.25rem 0;
+  font-size: 2.125rem;
+  text-align: center;
+}
+.profile-wrapper {
+  display: grid;
+  grid-template-columns: 300px 600px;
+  column-gap: 96px;
+  margin: 0 auto;
+}
+.card-wrapper {
+  margin-bottom: 30px;
+  background: #fff;
+  border-radius: 5px;
+}
+.card-wrapper:nth-last-child(1) {
+  margin-bottom: 0;
+}
+
+.card-wrapper .header {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  padding: 1.25rem 2rem;
+  align-items: center;
+  justify-content: space-between;
+  background: #704de4;
+  color: #fff;
+}
+.card-wrapper .header .title {
+  flex-grow: 1;
+}
+.main-wrapper {
+  display: grid;
+  row-gap: 1.875rem;
+  padding: 1.875rem 2rem 4rem;
+}
+.main-wrapper .item-container {
+}
+.main-wrapper .item-container .title {
+  margin: 0 0 0.5rem 0;
+  font-weight: bold;
+  font-size: 0.7rem;
+}
+.main-wrapper .item-container .tag-container {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  font-size: 0.7rem;
+  margin: 0 0.5rem 0 0;
+}
+.main-wrapper .item-container .tag-container:nth-last-child(1) {
+  margin-right: 0;
+}
+.privacy-setting {
+}
+
+.privacy-setting ul li {
+  display: grid;
+  grid-template-columns: 130px 1fr auto;
+}
+
+li .title {
+  color: #656565;
+}
+
+.link-btn {
+  display: block;
+  color: #656565;
+}
+
+.completed {
+  color: #ffd014;
 }
 </style>

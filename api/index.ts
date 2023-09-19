@@ -6,23 +6,35 @@ const instance = axios.create({
   withCredentials: true,
 })
 
-instance.interceptors.request.use((config) => {
-  return config
-})
-
-instance.interceptors.response.use((response) => {
-  if (response.data && response.data.data.accessToken) {
-    const {
-      data: {
-        data: { accessToken },
-      },
-    } = response
-    token.setToken(accessToken)
-    instance.defaults.headers.common.Authorization = `Bearer ${accessToken}`
+instance.interceptors.request.use(
+  (config) => {
+    return config
+  },
+  (error) => {
+    debugger
+    return Promise.reject(error)
   }
+)
 
-  return response
-})
+instance.interceptors.response.use(
+  (response) => {
+    if (response.data && response.data.data.accessToken) {
+      const {
+        data: {
+          data: { accessToken },
+        },
+      } = response
+      token.setToken(accessToken)
+      instance.defaults.headers.common.Authorization = `Bearer ${accessToken}`
+    }
+
+    return response
+  },
+  (error) => {
+    console.log(error)
+    return Promise.reject(error)
+  }
+)
 
 export const API_PATH = {
   signUp: 'auth/signup',

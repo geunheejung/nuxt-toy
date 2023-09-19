@@ -24,7 +24,8 @@ export default Vue.extend({
 <style lang="scss">
 .auth-layout {
   background-color: $bg-color2;
-  height: calc(100vh);
+  height: 100%;
+  min-height: 100vh;
   padding: 1.875rem 0 7.5rem 0;
 }
 

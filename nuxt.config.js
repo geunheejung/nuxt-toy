@@ -35,6 +35,7 @@ export default {
     {
       src: '@/plugins/vue-toast.ts',
     },
+    '@/plugins/api'
   ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
@@ -55,7 +56,14 @@ export default {
   },
 
   // Modules: https://go.nuxtjs.dev/config-modules
-  modules: [],
+  modules: [
+    ['@nuxtjs/axios'],
+    ['cookie-universal-nuxt']
+  ],
+  axios: {
+    baseURL: 'http://localhost:3000',
+    credentials: true,
+  },
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {

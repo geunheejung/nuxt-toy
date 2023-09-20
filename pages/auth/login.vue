@@ -72,6 +72,7 @@ export default Vue.extend({
 
       await this.$store.dispatch({ type: ACTION.FETCH_LOGIN, payload })
       await this.$store.dispatch({ type: ACTION.FETCH_GET_USER })
+
       this.$router.replace('/')
     },
     handleInput(target: HTMLInputElement) {

@@ -1,10 +1,23 @@
-const token = {
-  setToken: (token: string) => {
-    const accessTokenKey = encodeURIComponent('accessToken')
-    const accessToken = encodeURIComponent(token)
-    // document.cookie = `${accessTokenKey}=${accessToken}; max-age=300; SameSite; HttpOnly;`
-    document.cookie = `${accessTokenKey}=${accessToken}; max-age=3600; SameSite=lax;`
-  },
+import Cookies from 'js-cookie';
+
+const setCookie = (key: string, value: string) => Cookies.set(key, value, { path: '/', expires: 7, sameSite: 'lax' });
+
+const setAccessToken = (token: string) => {
+  setCookie('accessToken', token);
 }
 
-export default token
+const setToken = (token: string, refreshToken: string) => {
+  setCookie('accessToken', token);
+  setCookie('refreshToken', refreshToken);
+}
+
+const clearToken = () => {
+  Cookies.remove('accessToken');
+  Cookies.remove('refreshToken');
+}
+
+export default {
+  setToken,
+  setAccessToken,
+  clearToken
+}

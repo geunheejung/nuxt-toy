@@ -1,10 +1,10 @@
 import { getAccessorType, mutationTree, actionTree } from 'typed-vuex'
+import {API_PATH} from '~/api'
 import {
-  fetchGetUser,
   fetchLogin,
-  fetchRefreshToken,
   fetchSignUp,
 } from '~/api/member'
+import token from '~/utils/token'
 
 export interface IUser {
   id: number
@@ -12,7 +12,10 @@ export interface IUser {
   createdAt: number
 }
 
-export const state = (): { user: IUser | null; token: string } => ({
+export const state = (): {
+  user: IUser | null
+  token: string
+} => ({
   user: null,
   token: '',
 })
@@ -28,14 +31,18 @@ export const getters = {
 export const MUTATION = {
   SET_TOKEN: 'SET_TOKEN',
   SET_USER: 'SET_USER',
-}
+  CLEAR_TOKEN: 'CLEAR_TOKEN',
+} as const
 export const mutations = mutationTree(state, {
   [MUTATION.SET_USER](state, user: IUser) {
     state.user = user
   },
-  [MUTATION.SET_TOKEN](state, token: string) {
-    state.token = token
+  [MUTATION.SET_TOKEN](state, accessToken) {
+    state.token = accessToken
   },
+  [MUTATION.CLEAR_TOKEN](state) {
+    state.token = ''
+  }
 })
 
 export const ACTION = {
@@ -43,7 +50,8 @@ export const ACTION = {
   FETCH_LOGIN: 'FETCH_LOGIN',
   FETCH_GET_USER: 'FETCH_GET_USER',
   FETCH_REFRESH_TOKEN: 'FETCH_REFRESH_TOKEN',
-}
+  LOGOUT: 'LOGOUT',
+} as const
 
 export const actions = actionTree(
   { state, getters, mutations },
@@ -54,23 +62,32 @@ export const actions = actionTree(
     },
     async [ACTION.FETCH_LOGIN](context, { payload }) {
       const res = await fetchLogin(payload)
-      context.commit('SET_TOKEN', res.data.data.accessToken)
-
+      const { accessToken, refreshToken } = res.data
+      context.commit(MUTATION.SET_TOKEN, { accessToken, refreshToken })
+      token.setToken(accessToken, refreshToken)
       return res
     },
     async [ACTION.FETCH_GET_USER](context) {
-      // 토큰에 담긴 유저 정보를 토대로
-      const res = await fetchGetUser()
+      const { data: { data } } = await this.$axios.$get(API_PATH.user);
 
-      context.commit(MUTATION.SET_USER, res.data.data)
+      context.commit(MUTATION.SET_USER, data);
+
+      return data;
     },
     async [ACTION.FETCH_REFRESH_TOKEN](context) {
-      const res = await fetchRefreshToken()
+      const res = await this.$axios.$get(API_PATH.refresh)
 
-      debugger
-      context.commit('SET_TOKEN', res.accessToken)
+      const { accessToken } = res.data.data
+      context.commit(MUTATION.SET_TOKEN, accessToken);
+      token.setAccessToken(accessToken);
     },
-  }
+    [ACTION.LOGOUT](context) {
+      context.commit(MUTATION.CLEAR_TOKEN);
+      token.clearToken();
+      this.$router.replace('/auth/login');
+    }
+  },
+
 )
 
 export const accessorType = getAccessorType({

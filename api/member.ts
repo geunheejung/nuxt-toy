@@ -41,7 +41,7 @@ export type LoginPayloadType = {
 export const fetchLogin = async (payload: LoginPayloadType) => {
   try {
     const res = await instance.post(API_PATH.login, payload)
-    return res
+    return res.data
   } catch (error: any) {
     if (!error.response) throw new ApiError(error.message, 500)
     const {
@@ -56,8 +56,10 @@ export const fetchLogin = async (payload: LoginPayloadType) => {
 export const fetchGetUser = async () => {
   try {
     const res = await instance.get(API_PATH.user)
+
     return res
   } catch (error: any) {
+
     if (!error.response) throw new ApiError(error.message, 500)
 
     const {
@@ -71,7 +73,8 @@ export const fetchGetUser = async () => {
 
 export const fetchRefreshToken = async () => {
   try {
-    const res = await instance.post(API_PATH.refresh)
+
+    const res = await instance.get(API_PATH.refresh)
 
     return res.data.data
   } catch (error: any) {

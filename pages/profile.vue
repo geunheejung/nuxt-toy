@@ -115,43 +115,26 @@
 
 <script>
 import Vue from 'vue'
-import { ACTION } from '../store'
+import { ACTION } from '@/store'
 import Swipe from '@/components/Swipe/index.vue'
 
 export default Vue.extend({
   name: 'Profile',
   components: { Swipe },
-  async asyncData({ store }) {
+  async asyncData({ store,error }) {
     try {
       const user = await store.dispatch(ACTION.FETCH_GET_USER)
       return {
         user
       }
     } catch (err) {
-      if (err.response && err.response.status === 401) {
-        return {
-          user: {},
-          status: 401
-        }
-      }
+      const statusCode = err.response && err.response.status;
+      error({ statusCode: statusCode || 404 })
     }
   },
   data() {
     return {
       user: {},
-      status: 200
-    }
-  },
-  async fetch() {
-    if (this.status === 401) {
-      try {
-        const token = await this.$store.dispatch(ACTION.FETCH_REFRESH_TOKEN)
-      } catch (error) {
-        if (error.response.status === 401) {
-          this.$store.dispatch(ACTION.LOGOUT)
-        }
-      }
-
     }
   },
 })

@@ -128,8 +128,9 @@ export default Vue.extend({
         user
       }
     } catch (err) {
-      const statusCode = err.response && err.response.status;
-      error({ statusCode: statusCode || 404 })
+
+      const statusCode = err.status || 404;
+      error({ statusCode, message: err })
     }
   },
   data() {

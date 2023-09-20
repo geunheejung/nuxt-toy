@@ -1,6 +1,7 @@
 import { getAccessorType, mutationTree, actionTree } from 'typed-vuex'
 import {API_PATH} from '~/api'
 import {
+  fetchGetUser,
   fetchLogin,
   fetchSignUp,
 } from '~/api/member'
@@ -33,6 +34,7 @@ export const MUTATION = {
   SET_USER: 'SET_USER',
   CLEAR_TOKEN: 'CLEAR_TOKEN',
 } as const
+
 export const mutations = mutationTree(state, {
   [MUTATION.SET_USER](state, user: IUser) {
     state.user = user
@@ -56,35 +58,35 @@ export const ACTION = {
 export const actions = actionTree(
   { state, getters, mutations },
   {
-    async [ACTION.FETCH_SIGN_UP](context, { payload }) {
+    async [ACTION.FETCH_SIGN_UP](_, { payload }) {
       const res = await fetchSignUp(payload)
       return res
     },
-    async [ACTION.FETCH_LOGIN](context, { payload }) {
+    async [ACTION.FETCH_LOGIN]({ commit }, { payload }) {
       const res = await fetchLogin(payload)
       const { accessToken, refreshToken } = res.data
-      context.commit(MUTATION.SET_TOKEN, { accessToken, refreshToken })
+      commit(MUTATION.SET_TOKEN, { accessToken, refreshToken })
       token.setToken(accessToken, refreshToken)
       return res
     },
-    async [ACTION.FETCH_GET_USER](context) {
-      const { data: { data } } = await this.$axios.$get(API_PATH.user);
+    async [ACTION.FETCH_GET_USER]({ commit }) {
+      // const { data: { data } } = await this.$axios.$get(API_PATH.user);
 
-      context.commit(MUTATION.SET_USER, data);
+      const { data: { data } } = await fetchGetUser();
+      commit(MUTATION.SET_USER, data);
 
       return data;
     },
-    async [ACTION.FETCH_REFRESH_TOKEN](context) {
+    async [ACTION.FETCH_REFRESH_TOKEN]({ commit }) {
       const res = await this.$axios.$get(API_PATH.refresh)
-
-      const { accessToken } = res.data.data
-      context.commit(MUTATION.SET_TOKEN, accessToken);
+      const { accessToken } = res.data
+      commit(MUTATION.SET_TOKEN, accessToken);
       token.setAccessToken(accessToken);
     },
-    [ACTION.LOGOUT](context) {
-      context.commit(MUTATION.CLEAR_TOKEN);
+    [ACTION.LOGOUT]({ commit }) {
+      commit(MUTATION.CLEAR_TOKEN);
       token.clearToken();
-      this.$router.replace('/auth/login');
+      this.$router.replace(API_PATH.login);
     }
   },
 

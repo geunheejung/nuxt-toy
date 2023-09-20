@@ -1,19 +1,26 @@
-export default function ({ $axios, $cookies }) {
-  $axios.onRequest(config => {
-    if (!$cookies) return config;
+import instance from '@/api';
+import {AxiosRequestConfig, AxiosResponse, AxiosRequestHeaders} from "axios";
 
-    const accessToken = $cookies.get('accessToken');
-    $axios.setToken(accessToken, 'Bearer')
-    config.headers['Authorization'] = `Bearer ${accessToken}`;
+export default function ({ $cookies }: any) {
+  instance.interceptors.request.use((config: AxiosRequestConfig) => {
+      const accessToken = $cookies.get('accessToken');
 
-    return config;
+    if (accessToken) {
+      (config.headers as AxiosRequestHeaders).Authorization = `Bearer ${accessToken}`;
+    }
+
+
+      return config;
+
+
   });
 
-  $axios.onResponse(response => {
+  instance.interceptors.response.use((response: AxiosResponse) => {
     const {  data: { data: { accessToken } } } = response;
     if (accessToken) {
-      $axios.setToken(accessToken, 'Bearer')
+      instance.defaults.headers.common['Authorization'] = `Bearer ${accessToken}`;
     }
     return response;
   })
+
 }

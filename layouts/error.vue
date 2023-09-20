@@ -11,15 +11,15 @@ import {ACTION} from "~/store";
 
 export default {
   props: ['error'],
-
   async created() {
     const { error: { statusCode } } = this;
-    // 401에러일 경우 재요청 시킨 다음에
     if (statusCode === 401) {
       try {
-        const res = await this.$store.dispatch(ACTION.FETCH_REFRESH_TOKEN);
+        await this.$store.dispatch(ACTION.FETCH_REFRESH_TOKEN);
+        
       } catch (error) {
-        this.$store.dispatch(ACTION.LOGOUT);
+        console.log('error ->', error);
+        await this.$store.dispatch(ACTION.LOGOUT);
       }
     }
   },
